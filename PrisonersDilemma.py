@@ -3,7 +3,7 @@ import random
 import queue
 
 #Main Loop, runs the game a specified number of times
-def Main(gamesToPlay = 1000, playerOneStratagy = 'Random', playerTwoStratagy = 'Random', resultsQueue = queue.Queue()):
+def Main(gamesToPlay = 1000, playerOneStratagy = 'Random', playerTwoStratagy = 'Random'):
 	playerOneScoreTotal = [] #Initialize the lists of points recieved. Could just add scores to an ongoing tally instead of summing lists, but thi sallows for future further analysis
 	playerTwoScoreTotal = []
 
@@ -13,7 +13,7 @@ def Main(gamesToPlay = 1000, playerOneStratagy = 'Random', playerTwoStratagy = '
 		playerTwoScoreTotal.append(playerTwoScore)
 
 	results = (sum(playerOneScoreTotal), sum(playerTwoScoreTotal))
-	resultsQueue.put(results)
+	return(results)
 
 
 
