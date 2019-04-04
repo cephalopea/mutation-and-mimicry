@@ -11,7 +11,7 @@ def RandomStrategy(length):
     playerStrat = []
     stratLength = random.randint(0, length)
     for (i = 0; i < stratLength, i++):
-        playerStrat.append(strategies[boundedRand(strategies)])
+        playerStrat.append(strategies[BoundedRand(strategies)])
     return playerStrat
 
 #accepts a list of integers (should be the util results of the player's most recent round of games)
@@ -22,14 +22,14 @@ def Fitness(gameResults):
 #picks a random point in the genome and replaces it with a random strategy from strategies
 #returns a genome with same length as input genome
 def Mutate(genome):
-    mutationPoint = boundedRand(genome)
-    genome[mutationPoint] = strategies[boundedRand(strategies)]
+    mutationPoint = BoundedRand(genome)
+    genome[mutationPoint] = strategies[BoundedRand(strategies)]
     return genome
 
 #crosses over two genomes of the same length
 #returns a new genome with the beginning of genome1 and the end of genome2, same length as input genomes
 def Crossover(genome1, genome2):
-    crossOverPoint = random.randint(0, len(genome2))
+    crossOverPoint = BoundedRand(genome2)
     section1 = genome1[0:(crossOverPoint - 1)]
     section2 = genome[crossOverPoint:len(genome2)]
     return section1 + section2
