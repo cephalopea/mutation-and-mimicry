@@ -1,8 +1,13 @@
 import PrisonersDilemma as PD
 import evolution
 
-def Main(cyclePrompt):
+def Main(cyclePrompt, mutationPrompt):
     cycles = int(input(cyclePrompt)) #number of times to cycle through games
+    mutationPrompt = input(mutationPrompt)
+    if mutationPrompt == "y":
+        mutate = True
+    else:
+        mutate = False
     players = evolution.GenGen() #Generate initial genomes (lists of game stratagies)
     for x in range(cycles): #run the simulation cycles number of times      
         for player in range(players): #for each player
@@ -22,8 +27,11 @@ def Main(cyclePrompt):
                     playerTwo[memory][z] = strategies[0] #player two remembers the stratagy used by player one
                     players[player][memory][z] = strategies[1] #and vice versa
                     players[player][gameResults].append(result[0]) #Tell player one the result of game
-        evolution.Evolve(players)
+        if mutate:
+            evolution.MutateEvolve(players)
+        else:
+            evolution.Evolve(players)
 
 
 
-Main("Enter the number of cycles to run the simulation for: ")
+Main("Enter the number of cycles to run the simulation for: ", "Enable mutation? (y/n): ")
