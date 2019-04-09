@@ -18,9 +18,9 @@ def Main(cyclePrompt):
                 for z in range(9): #play ten games
                     strategy = players[player][strategy][z] #get the stratagy for the current player
                     strategy2 = playerTwo[strategy][z] #get the stratagy for the current oponent
-                    result, stratagies = PD.Main(1,strategy, strategy2) #play one game of prisoners dilemma
-                    playerTwo[memory][z] = stratagies[0] #player two remembers the stratagy used by player one
-                    players[player][memory][z] = stratagies[1] #and vice versa
+                    result, strategies = PD.Main(1,strategy, strategy2) #play one game of prisoners dilemma
+                    playerTwo[memory][z] = strategies[0] #player two remembers the stratagy used by player one
+                    players[player][memory][z] = strategies[1] #and vice versa
                     players[player][gameResults].append(result[0]) #Tell player one the result of game
         evolution.Evolve(players)
 
