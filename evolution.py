@@ -1,4 +1,6 @@
-strategies = ["defect", "cooperate"]
+import numpy
+
+strategies = ["defect", "cooperate", "steal"]
 samplePlayer = {"strategy": ["defect", "cooperate", "defect", "cooperate", "defect", "cooperate", "defect", "cooperate", "defect", "cooperate"], "memory": [], "gameResults": []}
 
 #returns a random integer between 0 and the index of the last element of the collection (n-1), inclusive
@@ -34,23 +36,81 @@ def Crossover(genome1, genome2):
     section2 = genome[crossOverPoint:len(genome2)]
     return section1 + section2
 
-#select the best subset of the given population
-#returns a collection of players and their fitness scores
-def Select(population, number):
-    selectedPlayers = []
-    for player in population:
-        fit = Fitness(player["gameResults"])
-        if (len(selectedPlayers) < number):
-            selectedPlayers.append({"player": player, "fitness": fit})
-        else:
-            for opponent in selectedPlayers:
-                if (fit > opponent["fitness"]):
-                    selectedPlayers.remove(opponent)
-                    selectedPlayers.append({"player": player, "fitness": fit})
-                    break
-    
-def Evolve():
-#use a switch case and a random integer to select a random function
+#selects the best individuals out of subsets of the total population, given a percentage of pop to select
+#returns an array of successful individual players
+def Select(population, selectNum):
+    numpy.random.shuffle(population)
+    selected = []
+    #next line from https://stackoverflow.com/questions/2130016/splitting-a-list-into-n-parts-of-approximately-equal-length/37414115
+    subsets = [population[i::selectNum] for i in xrange(selectNum)]
+    for subset in subsets:
+        selectedPlayer = None
+        for player in subset:
+            fit = Fitness(player["gameResults"])
+            if (!selectedPlayer):
+                selectedPlayer = {}
+                selectedPlayer["player"] = player
+                selectedPlayer["fitness"] = fit
+            else:
+                if (fit > selectedPlayer["fitness"]):
+                    selectedPlayer = {}
+                    selectedPlayer["player"] = player
+                    selectedPlayer["fitness"] = fit
+        selected.append(selectedPlayer["player"])
+    return selected
 
-def GenGen():
+#returns an evolved population using crossover 
+def Evolve(population):
+#use a switch case and a random integer to select a random function
+    breedPop = Select(population, len(population)/2)
+    remainPop = Select(population, len(population)/2)
+    nextGen = []
+    for (i = 0; i < len(breedPop); i++):
+        newPlayer = {}
+        newPlayer["gameResults"] = []
+        newPlayer["memory"] = []
+        randOne = breedPop[BoundedRand(breedPop)]
+        randTwo = breedPop[BoundedRand(breedPop)]
+        newPlayer["strategy"] = Crossover(randOne["strategy"], randTwo["strategy"])
+        nextGen.append(newPlayer)
+    nextGen = nextGen + remainPop
+    numpy.random.shuffle(nextGen)
+    return nextGen
+
+#returns an evolved population using mutation and crossover
+def MutateEvolve(population):
+#use a switch case and a random integer to select a random function
+    breedPop = Select(population, len(population)/3)
+    mutatePop = Select(population, len(population)/3)
+    remainPop = Select(population, len(population)/3)
+    nextGen = []
+    for (i = 0; i < len(breedPop); i++):
+        newPlayer = {}
+        newPlayer["gameResults"] = []
+        newPlayer["memory"] = []
+        randOne = breedPop[BoundedRand(breedPop)]
+        randTwo = breedPop[BoundedRand(breedPop)]
+        newPlayer["strategy"] = Crossover(randOne["strategy"], randTwo["strategy"])
+        nextGen.append(newPlayer)
+    for (i = 0; i < len(mutatePop); i++):
+        newPlayer = {}
+        newPlayer["gameResults"] = []
+        newPlayer["memory"] = []
+        newPlayer["strategy"] = Mutate(mutatePop[i]["strategy"])
+        nextGen.append(newPlayer)
+    nextGen = nextGen + remainPop
+    numpy.random.shuffle(nextGen)
+    return nextGen
+
+#generates an initial generation of players
+#returns an array of players
+def GenGen(popsize, stratlength):
+    generation = []
+    for (i = 0; i < popsize; i++):
+        newPlayer = {}
+        newPlayer["strategy"] = RandomStrategy(stratlength)
+        newPlayer["memory"] = []
+        newPlayer["gameResults"] = []
+        generation.append(newPlayer)
+    return generation
     
