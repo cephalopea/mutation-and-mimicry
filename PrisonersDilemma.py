@@ -13,7 +13,8 @@ def Main(gamesToPlay = 1000, playerOneStratagy = "random", playerTwoStratagy = "
 		playerTwoScoreTotal.append(playerTwoScore)
 
 	results = (sum(playerOneScoreTotal), sum(playerTwoScoreTotal))
-	return(results)
+	strategies = (playerOneStratagy, playerTwoStratagy)
+	return(results, strategies)
 
 
 
