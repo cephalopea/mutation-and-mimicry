@@ -22,11 +22,11 @@ def Main(cyclePrompt, mutationPrompt):
                 players[player]['memory'] = [] #Wipe memory of games against previous players
                 playerTwo['memory'] = []
                 for z in range(9): #play ten games
-                    strategy = players[player]['strategy'][z] #get the stratagy for the current player
-                    strategy2 = playerTwo['strategy'][z] #get the stratagy for the current oponent
+                    strategy = players[player]['strategy'][z] #get the strategy for the current player
+                    strategy2 = playerTwo['strategy'][z] #get the strategy for the current oponent
                     if strategy == 'steal':
                         if z > 0:
-                            strategy = player['memory'][-1]
+                            strategy = players[player]['memory'][-1] #player is the index, players is thelist of player dictionaries
                         else:
                             strategy = 'random'
                     if strategy2 == 'steal':
@@ -35,19 +35,21 @@ def Main(cyclePrompt, mutationPrompt):
                         else:
                             strategy2 = 'random'
                     result, strategies = PD.Main(1,strategy, strategy2) #play one game of prisoners dilemma
-                    print(playerTwo['memory'])
-                    print(strategies)
-                    print(strategies[0])
+                    #print(playerTwo['memory'])
+                    #print(strategies)
+                    #print(strategies[0])
                     playerTwo['memory'].append(strategies[0]) #player two remembers the stratagy used by player one
                     players[player]['memory'].append(strategies[1]) #and vice versa
                     players[player]['gameResults'].append(result[0]) #Tell player one the result of game
         playerFitnessList = Fitness(players)
-        for value in playerFitnessList:
-            WriteToCSV(value)
+        playerGenomeList = Genomes(players)
+        WriteToCSV(playerFitnessList, "FitnessData.csv")
+        WriteToCSV(playerGenomeList, "GenomeData.csv")
         if mutate:
             evolution.MutateEvolve(players)
         else:
             evolution.Evolve(players)
+    print("Run Completed")
 
 def Fitness(players):
     playerFitnessList = []
@@ -56,8 +58,15 @@ def Fitness(players):
         playerFitnessList.append(playerFitness)
     return(playerFitnessList)
 
-def WriteToCSV(dataToWrite):
-    with open("FitnessData.csv", "a") as csvfile:
+def Genomes(players):
+    playerGenomeList = []
+    for player in players:
+        playerGenome = player["strategy"]
+        playerGenomeList.append(playerGenome)
+    return(playerGenomeList)
+
+def WriteToCSV(dataToWrite, name):
+    with open(name, "a") as csvfile:
         dataWriter = csv.writer(csvfile)
         dataWriter.writerow(dataToWrite)
 
