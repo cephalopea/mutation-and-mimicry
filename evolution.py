@@ -19,8 +19,8 @@ def RandomStrategy(length):
 
 #accepts a list of integers (should be the util results of the player's most recent round of games)
 #returns a single integer that indicates a player's fitness (super simple for now, can improve later)
-def Fitness(gameResults):
-    return sum(gameResults)
+def Fitness(player):
+    return sum(player["gameResults"])
 
 #picks a random point in the genome and replaces it with a random strategy from strategies
 #returns a genome with same length as input genome
