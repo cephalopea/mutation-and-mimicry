@@ -47,7 +47,7 @@ def Select(population, selectNum):
     for subset in subsets:
         selectedPlayer = None
         for player in subset:
-            fit = Fitness(player["gameResults"])
+            fit = Fitness(player)
             if not selectedPlayer:
                 selectedPlayer = {}
                 selectedPlayer["player"] = player
