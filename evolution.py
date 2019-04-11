@@ -1,7 +1,9 @@
 import numpy
+import random
+import math
 
 strategies = ["defect", "cooperate", "steal"]
-samplePlayer = {"strategy": ["defect", "cooperate", "defect", "cooperate", "defect", "cooperate", "defect", "cooperate", "defect", "cooperate"], "memory": [], "gameResults": []}
+samplePlayer = {"strategy": ["defect", "cooperate", "steal", "cooperate", "steal", "cooperate", "defect", "cooperate", "steal", "cooperate"], "memory": [], "gameResults": []}
 
 #returns a random integer between 0 and the index of the last element of the collection (n-1), inclusive
 def BoundedRand(collection):
@@ -11,8 +13,7 @@ def BoundedRand(collection):
 #returns a list of strings (should be either "defect" or "cooperate")
 def RandomStrategy(length):
     playerStrat = []
-    stratLength = random.randint(0, length)
-    for (i = 0; i < stratLength, i++):
+    for i in range(length):
         playerStrat.append(strategies[BoundedRand(strategies)])
     return playerStrat
 
@@ -32,8 +33,8 @@ def Mutate(genome):
 #returns a new genome with the beginning of genome1 and the end of genome2, same length as input genomes
 def Crossover(genome1, genome2):
     crossOverPoint = BoundedRand(genome2)
-    section1 = genome1[0:(crossOverPoint - 1)]
-    section2 = genome[crossOverPoint:len(genome2)]
+    section1 = genome1[0:crossOverPoint]
+    section2 = genome2[crossOverPoint:len(genome2)]
     return section1 + section2
 
 #selects the best individuals out of subsets of the total population, given a percentage of pop to select
@@ -42,12 +43,12 @@ def Select(population, selectNum):
     numpy.random.shuffle(population)
     selected = []
     #next line from https://stackoverflow.com/questions/2130016/splitting-a-list-into-n-parts-of-approximately-equal-length/37414115
-    subsets = [population[i::selectNum] for i in xrange(selectNum)]
+    subsets = [population[i::selectNum] for i in range(selectNum)]
     for subset in subsets:
         selectedPlayer = None
         for player in subset:
             fit = Fitness(player["gameResults"])
-            if (!selectedPlayer):
+            if not selectedPlayer:
                 selectedPlayer = {}
                 selectedPlayer["player"] = player
                 selectedPlayer["fitness"] = fit
@@ -62,10 +63,10 @@ def Select(population, selectNum):
 #returns an evolved population using crossover 
 def Evolve(population):
 #use a switch case and a random integer to select a random function
-    breedPop = Select(population, len(population)/2)
-    remainPop = Select(population, len(population)/2)
+    breedPop = Select(population, math.floor(len(population)/2))
+    remainPop = Select(population, math.ceil(len(population)/2))
     nextGen = []
-    for (i = 0; i < len(breedPop); i++):
+    for i in range(len(breedPop)):
         newPlayer = {}
         newPlayer["gameResults"] = []
         newPlayer["memory"] = []
@@ -79,12 +80,11 @@ def Evolve(population):
 
 #returns an evolved population using mutation and crossover
 def MutateEvolve(population):
-#use a switch case and a random integer to select a random function
-    breedPop = Select(population, len(population)/3)
-    mutatePop = Select(population, len(population)/3)
-    remainPop = Select(population, len(population)/3)
+    breedPop = Select(population, math.floor(len(population)/3))
+    mutatePop = Select(population, math.floor(len(population)/3))
+    remainPop = Select(population, math.ceil(len(population)/3))
     nextGen = []
-    for (i = 0; i < len(breedPop); i++):
+    for i in range(len(breedPop)):
         newPlayer = {}
         newPlayer["gameResults"] = []
         newPlayer["memory"] = []
@@ -92,7 +92,7 @@ def MutateEvolve(population):
         randTwo = breedPop[BoundedRand(breedPop)]
         newPlayer["strategy"] = Crossover(randOne["strategy"], randTwo["strategy"])
         nextGen.append(newPlayer)
-    for (i = 0; i < len(mutatePop); i++):
+    for i in range(len(mutatePop)):
         newPlayer = {}
         newPlayer["gameResults"] = []
         newPlayer["memory"] = []
@@ -106,11 +106,10 @@ def MutateEvolve(population):
 #returns an array of players
 def GenGen(popsize, stratlength):
     generation = []
-    for (i = 0; i < popsize; i++):
+    for i in range(popsize):
         newPlayer = {}
         newPlayer["strategy"] = RandomStrategy(stratlength)
         newPlayer["memory"] = []
         newPlayer["gameResults"] = []
         generation.append(newPlayer)
     return generation
-    
