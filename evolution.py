@@ -1,8 +1,9 @@
+#code based on Lee's genetic algorithms code from AI in fall 2017
 import numpy
 import random
 import math
 
-strategies = ["defect", "cooperate", "steal"]
+strategies = ["defect", "cooperate", "steal", "random"]
 samplePlayer = {"strategy": ["defect", "cooperate", "steal", "cooperate", "steal", "cooperate", "defect", "cooperate", "steal", "cooperate"], "memory": [], "gameResults": []}
 
 #returns a random integer between 0 and the index of the last element of the collection (n-1), inclusive
